@@ -1,50 +1,35 @@
-export const initialCards = [
-  {
-    name: "Архыз",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-  },
-  {
-    name: "Челябинская область",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-  },
-  {
-    name: "Иваново",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-  },
-  {
-    name: "Камчатка",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-  },
-  {
-    name: "Холмогорский район",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-  },
-  {
-    name: "Байкал",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-  },
-];
-
 const cardTemplate = document.querySelector("#card-template").content;
 
-export function addCard({ link, name }, deleteClick) {
+export const createCard = (
+  cardData,
+  onDeleteCard,
+  onLikeCard,
+  onOpenImagePopup
+) => {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
-  const deleteButton = cardElement.querySelector(".card__delete-button");
+  const deleteCardButton = cardElement.querySelector(".card__delete-button");
+  const cardImage = cardElement.querySelector(".card__image");
+  const likeButton = cardElement.querySelector(".card__like-button");
 
-  cardElement.querySelector(".card__image").src = link;
-  cardElement.querySelector(".card__image").alt = name;
-  cardElement.querySelector(".card__title").textContent = name;
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
+  cardElement.querySelector(".card__title").textContent = cardData.name;
 
-  deleteButton.addEventListener("click", deleteClick);
+  cardImage.addEventListener("click", () => {
+    onOpenImagePopup(cardData);
+  });
+
+  deleteCardButton.addEventListener("click", () => onDeleteCard(cardElement));
+
+  likeButton.addEventListener("click", () => onLikeCard(likeButton));
 
   return cardElement;
+};
+
+export function deleteCard(cardElement) {
+  cardElement.remove();
 }
 
-export function deleteCard(event) {
-  const card = event.target.closest(".card");
-  card.remove();
-}
-
-export function toggleLike(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
+export function toggleLike(likeButton) {
+  likeButton.classList.toggle("card__like-button_is-active");
 }

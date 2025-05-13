@@ -1,29 +1,26 @@
-
 // Функция для открытия модального окна
- export function openPopup(popup) {
-  popup.classList.add("popup_is-opened"); // Используем класс для отображения
-
-  // Добавляем обработчик события для Esc
-  function handleEscKey(event) {
-    if (event.key === "Escape") {
-      closePopup(popup);
-    }
-  }
-
-  // Добавляем обработчик события на документ
-  document.addEventListener("keydown", handleEscKey);
-
-  // Удаляем обработчик события при закрытии попапа
-  popup.addEventListener("close", () => {
-    document.removeEventListener("keydown", handleEscKey);
-  });
+export function openPopup(popup) {
+  // Добавляем класс для отображения попапа
+  popup.classList.add("popup_is-opened");
+  // Вешаем обработчик для закрытия по Esc
+  document.addEventListener("keydown", closeEscPopup);
 }
 
 // Функция для закрытия модального окна
- export function closePopup(popup) {
-  popup.classList.remove("popup_is-opened"); // Используем класс для скрытия
+export function closePopup(popup) {
+  // Удаляем класс, скрывающий попап
+  popup.classList.remove("popup_is-opened");
+  // Удаляем обработчик Esc
+  document.removeEventListener("keydown", closeEscPopup);
+}
 
-  // Генерируем событие 'close' для удаления обработчика
-  const event = new Event("close");
-  popup.dispatchEvent(event);
+// Обработчик для закрытия по Esc
+export function closeEscPopup(e) {
+  if (e.key === "Escape") {
+    // Находим открытый попап по классу 'popup_is-opened'
+    const openPopup = document.querySelector(".popup.popup_is-opened");
+    if (openPopup) {
+      closePopup(openPopup);
+    }
+  }
 }
