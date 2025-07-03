@@ -21,3 +21,14 @@
   right: 0;
   z-index: 10;
 }
+
+.popup__error_visible { display: block; color: red;}
+.popup__error { display:  block;  font-size: 12px; }
+.popup__input_type_error { border-color: red; }
+.popup__button_disabled {cursor: not-allowed; background: #ffffff; color: rgba(0, 0, 0, 0.2); border: 1px solid  rgba(0, 0, 0, 0.2); opacity: .8;}
+
+
+
+
+
+

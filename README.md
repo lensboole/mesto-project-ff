@@ -1,1 +1,1 @@
-https://github.com/lensboole/mesto-project-ff.git
+https://lensboole.github.io/mesto-project-ff/
