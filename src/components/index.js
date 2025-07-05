@@ -18,29 +18,31 @@ const cardsContainer = document.querySelector(".places__list");
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const profileImage = document.querySelector(".profile__image");
-
-// Попапы
 const editPopup = document.querySelector(".popup_type_edit");
 const addPopup = document.querySelector(".popup_type_new-card");
 const avatarPopup = document.querySelector(".popup_type_avatar");
 const imagePopup = document.querySelector(".popup_type_image");
-
-// Формы
+const image = imagePopup.querySelector(".popup__image");
+const caption = imagePopup.querySelector(".popup__caption");
 const editForm = editPopup.querySelector(".popup__form");
 const addForm = addPopup.querySelector(".popup__form");
 const avatarForm = avatarPopup.querySelector(".popup__form");
-
-// Поля ввода
 const nameInput = editForm.querySelector(".popup__input_type_name");
 const jobInput = editForm.querySelector(".popup__input_type_description");
 const cardNameInput = addForm.querySelector(".popup__input_type_card-name");
 const cardLinkInput = addForm.querySelector(".popup__input_type_url");
 const avatarLinkInput = avatarForm.querySelector(".popup__input_type_url");
-
-// Кнопки
 const editButton = document.querySelector(".profile__edit-button");
 const addButton = document.querySelector(".profile__add-button");
 const avatarEditButton = document.querySelector(".profile__image-edit-button");
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 let currentUserId;
 
@@ -77,16 +79,7 @@ function renderCards(cards) {
   });
 }
 
-// Обработчики действий
-function handleDeleteCard(cardId, cardElement) {
-  deleteCardFromServer(cardId)
-    .then(() => {
-      deleteCard(cardElement);
-    })
-    .catch(console.error);
-}
-
-function handleLikeCard(cardId, likeButton, likeCounter) {
+  function handleLikeCard(cardId, likeButton, likeCounter) {
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
   
   toggleLikeOnServer(cardId, isLiked)
@@ -98,10 +91,16 @@ function handleLikeCard(cardId, likeButton, likeCounter) {
     });
 }
 
+// Обработчики действий
+function handleDeleteCard(cardId, cardElement) {
+  deleteCardFromServer(cardId)
+    .then(() => {
+      deleteCard(cardElement);
+    })
+    .catch(console.error);
+}
+
 function openImagePopup(cardData) {
-  const image = imagePopup.querySelector(".popup__image");
-  const caption = imagePopup.querySelector(".popup__caption");
-  
   image.src = cardData.link;
   image.alt = cardData.name;
   caption.textContent = cardData.name;
@@ -177,19 +176,19 @@ function handleAvatarFormSubmit(evt) {
 editButton.addEventListener("click", () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
-  clearValidation(editForm);
+  clearValidation(editForm, validationConfig);
   openPopup(editPopup);
 });
 
 addButton.addEventListener("click", () => {
   addForm.reset();
-  clearValidation(addForm);
+  clearValidation(addForm, validationConfig);
   openPopup(addPopup);
 });
 
 avatarEditButton.addEventListener("click", () => {
   avatarForm.reset();
-  clearValidation(avatarForm);
+  clearValidation(avatarForm, validationConfig);
   openPopup(avatarPopup);
 });
 
@@ -199,11 +198,11 @@ avatarForm.addEventListener("submit", handleAvatarFormSubmit);
 
 // Закрытие попапов
 document.querySelectorAll(".popup__close").forEach(button => {
+   const popup = button.closest(".popup");
   button.addEventListener("click", () => {
-    const popup = button.closest(".popup");
     closePopup(popup);
   });
 });
 
 // Включение валидации
-enableValidation();
+enableValidation(validationConfig);

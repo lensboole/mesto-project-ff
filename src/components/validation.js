@@ -1,12 +1,3 @@
-const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible"
-};
-
 function showError(form, input, message, config) {
   const error = form.querySelector(`.${input.name}-error`);
   input.classList.add(config.inputErrorClass);
@@ -41,7 +32,7 @@ function toggleButton(inputs, button, config) {
   button.classList.toggle(config.inactiveButtonClass, !isValid);
 }
 
-export function enableValidation(config = validationConfig) {
+export function enableValidation(config) {
   const forms = document.querySelectorAll(config.formSelector);
   forms.forEach(form => {
     const inputs = [...form.querySelectorAll(config.inputSelector)];
@@ -58,7 +49,7 @@ export function enableValidation(config = validationConfig) {
   });
 }
 
-export function clearValidation(form, config = validationConfig) {
+export function clearValidation(form, config) {
   const inputs = [...form.querySelectorAll(config.inputSelector)];
   const button = form.querySelector(config.submitButtonSelector);
 

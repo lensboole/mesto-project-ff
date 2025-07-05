@@ -19,8 +19,12 @@ export const createCard = (
   cardTitle.textContent = cardData.name;
   likeCounter.textContent = cardData.likes.length;
 
-  // Показываем кнопку удаления только для своих карточек
-  deleteButton.style.display = cardData.owner._id === currentUserId ? "block" : "none";
+  
+  if (cardData.owner._id === currentUserId) {
+    deleteButton.classList.add('card__delete-button_visible');
+  } else {
+    deleteButton.classList.remove('card__delete-button_visible');
+  }
 
   // Проверяем, лайкнул ли текущий пользователь карточку
   const isLiked = cardData.likes.some(like => like._id === currentUserId);
@@ -44,3 +48,4 @@ export function toggleLike(likeButton, likeCounter, likesCount) {
   likeButton.classList.toggle("card__like-button_is-active");
   likeCounter.textContent = likesCount;
 }
+

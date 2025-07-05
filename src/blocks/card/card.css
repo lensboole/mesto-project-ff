@@ -13,3 +13,12 @@
   position: relative;
   overflow: hidden;
 }
+
+
+.card__delete-button {
+  display: none;
+}
+
+.card__delete-button_visible {
+  display: block;
+}
