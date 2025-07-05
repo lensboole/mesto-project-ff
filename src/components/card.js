@@ -34,8 +34,8 @@ export const createCard = (
 
   // Обработчики событий
   cardImage.addEventListener("click", () => onImageClick(cardData));
-  deleteButton.addEventListener("click", () => onDeleteClick());
-  likeButton.addEventListener("click", () => onLikeClick(likeButton, likeCounter));
+  deleteButton.addEventListener("click", () => onDeleteClick(cardData._id));
+  likeButton.addEventListener("click", () => onLikeClick(cardData._id, cardElement));
 
   return cardElement;
 };
@@ -44,8 +44,16 @@ export function deleteCard(cardElement) {
   cardElement.remove();
 }
 
-export function toggleLike(likeButton, likeCounter, likesCount) {
+export function toggleLike(cardElement, likesCount) {
+  const likeButton = cardElement.querySelector(".card__like-button");
+  const likeCounter = cardElement.querySelector(".card__like-counter");
+  
   likeButton.classList.toggle("card__like-button_is-active");
   likeCounter.textContent = likesCount;
+}
+
+export function isCardLiked(cardElement) {
+  const likeButton = cardElement.querySelector(".card__like-button");
+  return likeButton.classList.contains("card__like-button_is-active");
 }
 

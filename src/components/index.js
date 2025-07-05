@@ -1,5 +1,5 @@
 import "/src/pages/index.css";
-import { createCard, deleteCard, toggleLike } from "./card.js";
+import { createCard, deleteCard, toggleLike, isCardLiked } from "./card.js";
 import avatar from "../images/avatar.jpg";
 import { openPopup, closePopup } from "./modal.js";
 import { enableValidation, clearValidation } from './validation.js';
@@ -67,11 +67,7 @@ function renderCards(cards) {
     const cardElement = createCard(
       card,
       () => handleDeleteCard(card._id, cardElement),
-      () => {
-        const likeButton = cardElement.querySelector(".card__like-button");
-        const likeCounter = cardElement.querySelector(".card__like-counter");
-        handleLikeCard(card._id, likeButton, likeCounter);
-      },
+      () => handleLikeCard(card._id, cardElement),
       openImagePopup,
       currentUserId
     );
@@ -79,12 +75,12 @@ function renderCards(cards) {
   });
 }
 
-  function handleLikeCard(cardId, likeButton, likeCounter) {
-  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+  function handleLikeCard(cardId, cardElement) {
+  const isLiked = isCardLiked(cardElement);
   
   toggleLikeOnServer(cardId, isLiked)
     .then(updatedCard => {
-      toggleLike(likeButton, likeCounter, updatedCard.likes.length);
+      toggleLike(cardElement, updatedCard.likes.length);
     })
     .catch(err => {
       console.error("Ошибка при обновлении лайка:", err);
@@ -138,8 +134,8 @@ function handleAddFormSubmit(evt) {
     .then(newCard => {
       const cardElement = createCard(
         newCard,
-        (cardId) => handleDeleteCard(cardId, cardElement),
-        (cardId) => handleLikeCard(cardId, cardElement),
+        () => handleDeleteCard(newCard._id, cardElement),
+        () => handleLikeCard(newCard._id, cardElement),
         openImagePopup,
         currentUserId
       );
@@ -206,3 +202,11 @@ document.querySelectorAll(".popup__close").forEach(button => {
 
 // Включение валидации
 enableValidation(validationConfig);
+
+document.querySelectorAll('.popup').forEach(popup => {
+  popup.addEventListener('mousedown', (evt) => {
+    if (evt.target === popup) {
+      closePopup(popup);
+    }
+  });
+});
